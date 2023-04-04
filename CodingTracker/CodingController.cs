@@ -20,5 +20,37 @@ namespace CodingTracker
                 }
             }
         }
+        internal void Get()
+        {
+            List<Coding> tableData = new List<Coding>();
+            using(var connection = new SqliteConnection(connectionString))
+            {
+                using(var tableCmd = connection.CreateCommand())
+                {
+                    connection.Open();
+                    tableCmd.CommandText = $@"SELECT * FROM codingTracker";
+
+                    using(var reader = tableCmd.ExecuteReader())
+                    {
+                        if(!reader.HasRows)
+                            Console.WriteLine("\nNo data found.\n");
+                        else
+                        {
+                            while (reader.Read())
+                            {
+                                tableData.Add(
+                                new Coding
+                                {
+                                    Id = reader.GetInt32(0),
+                                    Date = reader.GetString(1),
+                                    Duration = reader.GetString(2)
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            TableVisualisation.ShowTable(tableData);
+        }
     }
 }

@@ -7,11 +7,10 @@ namespace CodingTracker
         CodingController codingController = new(); // controller for sending the data (Coding object) to the bd.
         public void MainMenu()
         {
-            Console.Clear();
-
             bool appRunning = true;
             while (appRunning)
             {
+                Console.Clear();
                 Console.WriteLine("\nCoding Tracker");
                 Console.WriteLine("-----------------------\n");
                 Console.WriteLine("Type 1 - VIEW RECORD");
@@ -36,7 +35,7 @@ namespace CodingTracker
                         Environment.Exit(0);
                         break;
                     case "1":
-
+                        codingController.Get();
                         break;
                     case "2":
                         ProcessAdd();
@@ -59,10 +58,12 @@ namespace CodingTracker
         }
         private void ProcessAdd()
         {
+            Console.Clear();
+
             string date = GetDate();
             string duration = GetDuration();
 
-            Coding coding = new();
+            Coding coding = new(); 
             coding.Date = date;
             coding.Duration = duration;
 
