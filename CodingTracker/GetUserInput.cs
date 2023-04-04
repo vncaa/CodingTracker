@@ -44,7 +44,7 @@ namespace CodingTracker
                         //UpdateRecord();
                         break;
                     case "4":
-                        //DeleteRecord();
+                        ProcessDelete();
                         break;
                     default:
                         ErrorMessage();
@@ -52,6 +52,38 @@ namespace CodingTracker
                 }
             }
         }
+
+        private void ProcessDelete()
+        {
+            codingController.Get(); //showing all the data
+            Console.WriteLine("\nPlease insert the Id of the record you want to delete. Type 0 to return to the Main Menu.");
+
+            string userInput = Console.ReadLine(); // checking for a number >= 0
+            while(!int.TryParse(userInput, out _) || String.IsNullOrEmpty(userInput) || int.Parse(userInput) < 0)
+            {
+                ErrorMessage();
+                userInput = Console.ReadLine();
+            }
+
+            int id = int.Parse(userInput);
+            if (id == 0) MainMenu();
+
+            Coding coding = codingController.GetById(id); // checking if the id exists and returning the filled object back
+
+            while(coding.Id == 0)
+            {
+                Console.WriteLine($"\nRecord with id {id} does not exists.");
+                Console.WriteLine("\nPlease insert the Id of the record you want to delete. Type 0 to return to the Main Menu.");
+
+                userInput = Console.ReadLine();
+                id = int.Parse(userInput);
+
+                coding = codingController.GetById(id);
+            }
+
+            codingController.Delete(id);
+        }
+
         public void ErrorMessage()
         {
             Console.WriteLine("\nInvalid input, please try again.");

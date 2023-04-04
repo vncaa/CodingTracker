@@ -13,7 +13,6 @@ namespace CodingTracker
                 .WithTitle("Coding Tracker")
                 .ExportAndWriteLine();
 
-            Console.WriteLine("\nEnter - Main Menu.");
             Console.ReadKey();
         }
     }

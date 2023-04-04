@@ -52,5 +52,47 @@ namespace CodingTracker
             }
             TableVisualisation.ShowTable(tableData);
         }
+        internal Coding GetById(int id)
+        {
+            using(var connection = new SqliteConnection(connectionString))
+            {
+                using(var tableCmd = connection.CreateCommand())
+                {
+                    connection.Open();
+                    tableCmd.CommandText = $"SELECT * FROM codingTracker WHERE Id = '{id}'";
+                    
+                    using (var reader = tableCmd.ExecuteReader())
+                    {
+                        Coding coding = new();
+                        if (!reader.HasRows)
+                            Console.WriteLine("\nNo data found.\n");
+                        else
+                        {
+                            reader.Read();
+                            coding.Id = reader.GetInt32(0);
+                            coding.Date = reader.GetString(1);
+                            coding.Duration = reader.GetString(2);
+                        }
+                        return coding;
+                    }
+                }
+            }
+
+            
+        }
+        internal void Delete(int id)
+        {
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                using(var tableCmd = connection.CreateCommand())
+                {
+                    connection.Open();
+                    tableCmd.CommandText = $"DELETE FROM codingTracker WHERE Id = '{id}'";
+                    tableCmd.ExecuteNonQuery();
+
+                    Console.WriteLine("\nRecord was deleted.");
+                }
+            }
+        }
     }
 }
