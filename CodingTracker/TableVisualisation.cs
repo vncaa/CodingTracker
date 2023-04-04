@@ -6,14 +6,14 @@ namespace CodingTracker
     {
         internal static void ShowTable<T>(List<T> tableData) where T : class
         {
-            Console.Clear();
+            Console.WriteLine();
 
             ConsoleTableBuilder
                 .From(tableData)
                 .WithTitle("Coding Tracker")
                 .ExportAndWriteLine();
 
-            Console.ReadKey();
+            Console.WriteLine();
         }
     }
 }

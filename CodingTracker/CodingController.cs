@@ -65,7 +65,7 @@ namespace CodingTracker
                     {
                         Coding coding = new();
                         if (!reader.HasRows)
-                            Console.WriteLine("\nNo data found.\n");
+                            Console.WriteLine("\nNo data found.");
                         else
                         {
                             reader.Read();
@@ -89,10 +89,25 @@ namespace CodingTracker
                     connection.Open();
                     tableCmd.CommandText = $"DELETE FROM codingTracker WHERE Id = '{id}'";
                     tableCmd.ExecuteNonQuery();
-
-                    Console.WriteLine("\nRecord was deleted.");
                 }
             }
+            Console.WriteLine("\nRecord was deleted.");
+        }
+        internal void Update(Coding coding)
+        {
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                using (var tableCmd = connection.CreateCommand())
+                {
+                    connection.Open();
+                    tableCmd.CommandText = @$"UPDATE walking Tracker SET
+                                                Date = '{coding.Date}'
+                                                Duration = '{coding.Duration}'
+                                              WHERE Id = '{coding.Id}'";
+                    tableCmd.ExecuteNonQuery();
+                }
+            }
+            Console.WriteLine("\nRecord was updated.");
         }
     }
 }

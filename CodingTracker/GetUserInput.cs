@@ -10,13 +10,13 @@ namespace CodingTracker
             bool appRunning = true;
             while (appRunning)
             {
-                Console.Clear();
                 Console.WriteLine("\nCoding Tracker");
-                Console.WriteLine("-----------------------\n");
+                Console.WriteLine("-----------------------");
                 Console.WriteLine("Type 1 - VIEW RECORD");
                 Console.WriteLine("Type 2 - ADD RECORD");
                 Console.WriteLine("Type 3 - UPDATE RECORD");
                 Console.WriteLine("Type 4 - DELETE RECORD");
+                Console.WriteLine("Type 5 - Clear Console");
                 Console.WriteLine("Type 0 - Close App");
                 Console.WriteLine("-----------------------");
 
@@ -41,10 +41,13 @@ namespace CodingTracker
                         ProcessAdd();
                         break;
                     case "3":
-                        //UpdateRecord();
+                        ProcessUpdate();
                         break;
                     case "4":
                         ProcessDelete();
+                        break;
+                    case "5":
+                        Console.Clear();
                         break;
                     default:
                         ErrorMessage();
@@ -52,7 +55,70 @@ namespace CodingTracker
                 }
             }
         }
+        private void ProcessUpdate()
+        {
+            codingController.Get(); //showing all the data
+            Console.WriteLine("\nPlease insert the Id of the record you want to update. Type 0 to return to the Main Menu.");
 
+            string userInput = Console.ReadLine(); // checking for a number >= 0
+            while (!int.TryParse(userInput, out _) || String.IsNullOrEmpty(userInput) || int.Parse(userInput) < 0)
+            {
+                ErrorMessage();
+                userInput = Console.ReadLine();
+            }
+
+            int id = int.Parse(userInput);
+            if (id == 0) MainMenu();
+
+            Coding coding = codingController.GetById(id); // checking if the id exists and returning the filled object back
+
+            while (coding.Id == 0)
+            {
+                Console.WriteLine($"\nRecord with id {id} does not exists.");
+                //ProcessUpdate();
+                Console.WriteLine("\nPlease insert the Id of the record you want to update. Type 0 to return to the Main Menu.");
+
+                userInput = Console.ReadLine();
+                id = int.Parse(userInput);
+
+                if (id == 0) MainMenu();
+
+                coding = codingController.GetById(id);
+            }
+
+            string updateInput = "";
+            bool updating = true;
+            while (updating == true)
+            {
+                Console.WriteLine("\nType 'd' for Date");
+                Console.WriteLine("Type 't' for Duration");
+                Console.WriteLine("Type 's' to save the update");
+                Console.WriteLine("Type '0' to return to the Main Menu");
+
+                updateInput = Console.ReadLine();
+
+                switch (updateInput)
+                {
+                    case "d":
+                        coding.Date = GetDate();
+                        break;
+                    case "t":
+                        coding.Duration = GetDuration();
+                        break;
+                    case "s":
+                        updating = false;
+                        break;
+                    case "0":
+                        updating = false;
+                        MainMenu();
+                        break;
+                    default:
+                        ErrorMessage();
+                        break;
+                }
+            }
+            codingController.Update(coding);
+        }
         private void ProcessDelete()
         {
             codingController.Get(); //showing all the data
@@ -78,20 +144,19 @@ namespace CodingTracker
                 userInput = Console.ReadLine();
                 id = int.Parse(userInput);
 
+                if (id == 0) MainMenu();
+
                 coding = codingController.GetById(id);
             }
 
             codingController.Delete(id);
         }
-
-        public void ErrorMessage()
+        private void ErrorMessage()
         {
             Console.WriteLine("\nInvalid input, please try again.");
         }
         private void ProcessAdd()
         {
-            Console.Clear();
-
             string date = GetDate();
             string duration = GetDuration();
 
@@ -120,11 +185,11 @@ namespace CodingTracker
 
         private string GetDate()
         {
-            Console.Write("\nPlease insert a date (Format: dd-mm-yy). Type 0 to return to the Main Menu: ");
+            Console.Write("\nPlease insert a date (Format: dd-mm-yyyy). Type 0 to return to the Main Menu: ");
             string userInput = Console.ReadLine();
 
             if (userInput == "0") MainMenu();
-            while(!DateTime.TryParseExact(userInput, "dd-MM-yy", new CultureInfo("cs-CZ"), DateTimeStyles.None, out _))
+            while(!DateTime.TryParseExact(userInput, "dd-MM-yyyy", new CultureInfo("cs-CZ"), DateTimeStyles.None, out _))
             {
                 ErrorMessage();
                 userInput = Console.ReadLine();
