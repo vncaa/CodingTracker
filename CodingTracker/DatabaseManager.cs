@@ -20,7 +20,6 @@ namespace CodingTracker
                     tableCmd.ExecuteNonQuery();
                 }
             }
-            Console.WriteLine(".");
         }
         
     }
