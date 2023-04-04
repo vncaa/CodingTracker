@@ -100,8 +100,8 @@ namespace CodingTracker
                 using (var tableCmd = connection.CreateCommand())
                 {
                     connection.Open();
-                    tableCmd.CommandText = @$"UPDATE walking Tracker SET
-                                                Date = '{coding.Date}'
+                    tableCmd.CommandText = @$"UPDATE codingTracker SET
+                                                Date = '{coding.Date}',
                                                 Duration = '{coding.Duration}'
                                               WHERE Id = '{coding.Id}'";
                     tableCmd.ExecuteNonQuery();
